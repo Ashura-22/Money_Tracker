@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Money Tracker</string>
+    <string name="welcome_to_dashboard">Welcome to dashboard</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="not_registered_yet_sign_up">Not Registered Yet , Sign Up !</string>
+    <string name="textview">TextView</string>
+    <string name="logout">Logout</string>
+</resources>
