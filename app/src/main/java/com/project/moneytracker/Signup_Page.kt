@@ -2,21 +2,19 @@ package com.project.moneytracker
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.KeyEvent
-import android.view.View
-import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 import com.project.moneytracker.databinding.ActivitySignupPageBinding
 
 class Signup_Page : AppCompatActivity(){
 
     private lateinit var binding: ActivitySignupPageBinding
     private lateinit var firebaseAuth: FirebaseAuth
+    val db = Firebase.firestore
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,13 +57,30 @@ class Signup_Page : AppCompatActivity(){
                     firebaseAuth.createUserWithEmailAndPassword(mail,pwd).addOnCompleteListener{
                         if (it.isSuccessful)
                         {            //this will redirect to Login page
-                            val intent= Intent(this,Login_Page::class.java)
-                            startActivity(intent)
+                            Toast.makeText(this, "User Created", Toast.LENGTH_SHORT).show()
+
+                            //Below code is used to store name in firebase
+                            //By mapping name with uid
+                            //user logged in because to retrieve uid using firebaseAuth via mail
+                            //and signed out after successful retrieving uid
+                            firebaseAuth.signInWithEmailAndPassword(mail, pwd).addOnCompleteListener {
+                                //this will store name in firebase
+                                val ud = FirebaseAuth.getInstance().uid
+                                    /*
+                                    code not working
+                                    if (ud != null) {
+                                        db.collection("user_data").document(ud).set(name)
+                                    }*/
+                                binding.textView6.text=ud
+                                firebaseAuth.signOut()
+                            }
+                            //redirecting to login page
+                            //val intent= Intent(this,Login_Page::class.java)
+                            //startActivity(intent)
                         }
                         else
                         {
                             Toast.makeText(this,  it.exception.toString(), Toast.LENGTH_SHORT).show()
-
                         }
                     }
                 }
